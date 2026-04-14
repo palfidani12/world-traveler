@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# World Traveler App
 
-## Getting Started
+Clean Next.js 16 + TypeScript starter with template code removed and a scalable source layout.
 
-First, run the development server:
+## Scripts
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+.
+|- public/
+|  |- images/
+|- src/
+|  |- app/
+|  |  |- globals.css
+|  |  |- layout.tsx
+|  |  |- page.tsx
+|  |- components/
+|  |  |- layout/
+|  |  |- ui/
+|  |- config/
+|  |  |- site.ts
+|  |- features/
+|  |- hooks/
+|  |- lib/
+|  |- styles/
+|  |- types/
+|- eslint.config.mjs
+|- next.config.ts
+|- package.json
+|- tsconfig.json
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Organization Rules
 
-## Learn More
+- Keep route files in `src/app` only (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `route.ts`).
+- Keep domain logic in `src/features` (example: `src/features/trips`).
+- Put reusable UI in `src/components/ui` and app layout shells in `src/components/layout`.
+- Put pure utilities in `src/lib`, shared types in `src/types`, and React hooks in `src/hooks`.
+- Keep app-level constants and metadata in `src/config`.
 
-To learn more about Next.js, take a look at the following resources:
+## Next Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create your first feature module under `src/features`.
+2. Add pages/routes under `src/app` that consume those features.
+3. Add tests once core flows are in place.
