@@ -11,6 +11,17 @@ npm run start
 npm run lint
 ```
 
+## Firebase Authentication Setup
+
+1. Create a Firebase project and enable `Authentication > Sign-in method > Email/Password`.
+2. Copy `.env.example` to `.env.local` and fill in your Firebase web app credentials.
+3. Run `npm run dev`.
+
+Auth routes:
+
+- `/login`
+- `/register`
+
 ## Project Structure
 
 ```text

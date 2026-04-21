@@ -1,7 +1,7 @@
 // lib/firebase.ts (or wherever you define your db)
 import { collection, DocumentData, QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 import type { User } from "@/types/user";
-import { db } from "../config";
+import { db } from "../firebase/config";
 
 // 1. Create the converter
 const userConverter = {
