@@ -4,11 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard", label: "Overview" },
   { href: "/trips", label: "My Trips" },
-  { href: "/destinations", label: "Explore" },
-  { href: "/example", label: "Settings" },
+  { href: "/settings", label: "Settings" },
 ] as const;
+
+function isActivePath(pathname: string, href: string) {
+  if (href === "/trips") {
+    return pathname === "/trips" || pathname.startsWith("/trips/");
+  }
+
+  return pathname === href;
+}
 
 export function LoggedInHeader() {
   const pathname = usePathname();
@@ -23,7 +30,7 @@ export function LoggedInHeader() {
           <Link
             key={item.href}
             href={item.href}
-            className={pathname === item.href
+            className={isActivePath(pathname, item.href)
               ? "text-[#205f79] underline decoration-2 underline-offset-[7px]"
               : "transition hover:text-[#2d4250]"}
           >

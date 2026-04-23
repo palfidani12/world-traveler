@@ -1,52 +1,6 @@
 import type { Metadata } from "next";
-
-type TripStatus = "active" | "confirmed" | "drafting" | "completed";
-
-type TripItem = {
-  id: string;
-  title: string;
-  dates: string;
-  progress: number;
-  status: TripStatus;
-  theme: string;
-  footer?: string;
-};
-
-const trips: TripItem[] = [
-  {
-    id: "amalfi",
-    title: "Amalfi Coast Expedition",
-    dates: "Sep 12 - Sep 20, 2024",
-    progress: 85,
-    status: "active",
-    theme: "from-sky-400 via-blue-500 to-cyan-700",
-  },
-  {
-    id: "tokyo",
-    title: "Tokyo City Lights",
-    dates: "Oct 05 - Oct 14, 2024",
-    progress: 40,
-    status: "confirmed",
-    theme: "from-slate-900 via-fuchsia-950 to-slate-800",
-  },
-  {
-    id: "alpine",
-    title: "Alpine Retreat",
-    dates: "Dec 22 - Dec 30, 2024",
-    progress: 15,
-    status: "drafting",
-    theme: "from-sky-500 via-blue-900 to-stone-900",
-  },
-  {
-    id: "venice",
-    title: "Venice Biennale 2023",
-    dates: "Aug 04 - Aug 12, 2023",
-    progress: 100,
-    status: "completed",
-    theme: "from-sky-300 via-amber-100 to-cyan-700",
-    footer: "Memories saved",
-  },
-];
+import Link from "next/link";
+import { trips, type TripStatus } from "@/features/trips/data";
 
 const statusStyles: Record<TripStatus, string> = {
   active: "bg-cyan-100 text-cyan-800",
@@ -89,7 +43,10 @@ export default function TripsPage() {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        <article className="flex min-h-80 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#c8d5dc] bg-white/70 p-8 text-center">
+        <Link
+          href="/trips/new"
+          className="flex min-h-80 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#c8d5dc] bg-white/70 p-8 text-center transition hover:border-[#8cb3c5] hover:bg-white"
+        >
           <span className="mb-6 inline-flex size-12 items-center justify-center rounded-full bg-[#edf4f8] text-3xl text-[#4a6778]">
             +
           </span>
@@ -97,11 +54,12 @@ export default function TripsPage() {
           <p className="mt-3 max-w-[18ch] text-sm leading-6 text-[#6f8794]">
             Start designing your next curator-approved journey.
           </p>
-        </article>
+        </Link>
 
         {trips.map((trip) => (
-          <article
+          <Link
             key={trip.id}
+            href={`/trips/${trip.id}/dashboard`}
             className="overflow-hidden rounded-2xl border border-[#d2dde4] bg-white shadow-[0_16px_45px_rgba(23,43,56,0.08)]"
           >
             <div className={`relative h-44 bg-linear-to-br ${trip.theme}`}>
@@ -117,13 +75,7 @@ export default function TripsPage() {
                 <h2 className="max-w-[14ch] text-[34px] font-semibold leading-9 tracking-[-0.02em] text-[#1a2832]">
                   {trip.title}
                 </h2>
-                <button
-                  type="button"
-                  aria-label={`Trip options for ${trip.title}`}
-                  className="mt-1 text-2xl leading-none text-[#4f6875]"
-                >
-                  ⋮
-                </button>
+                <span className="mt-1 text-2xl leading-none text-[#4f6875]">⋮</span>
               </div>
 
               <p className="mt-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.03em] text-[#7a909c]">
@@ -149,7 +101,7 @@ export default function TripsPage() {
                 </p>
               )}
             </div>
-          </article>
+          </Link>
         ))}
       </div>
 

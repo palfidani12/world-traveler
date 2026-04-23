@@ -33,57 +33,113 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-20 sm:px-10">
-      <div className="mx-auto w-full max-w-md rounded-2xl border border-panel-border bg-panel p-6 shadow-[0_12px_30px_rgba(21,32,30,0.04)]">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-text-muted">Account</p>
-        <h1 className="mt-4 text-3xl font-semibold">Register</h1>
-        <p className="mt-3 text-sm text-text-muted">Create an account to start planning trips.</p>
+    <main className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#b9cad1_0%,#d7d6cc_48%,#ede4d6_100%)] px-4 py-5 sm:px-6 sm:py-8">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(255,255,255,0.75),transparent_36%),linear-gradient(180deg,rgba(18,36,43,0.06),rgba(18,36,43,0))]" />
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          <label className="flex flex-col gap-2 text-sm font-medium">
-            Email
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-              className="rounded-lg border border-panel-border bg-white px-3 py-2 outline-none transition-colors focus:border-text"
-            />
-          </label>
+      <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-140 items-center justify-center">
+        <section className="w-full rounded-[22px] border border-white/70 bg-white px-5 py-8 shadow-[0_24px_70px_rgba(40,61,68,0.18)] sm:px-10 sm:py-11">
+          <div className="mx-auto flex max-w-105 flex-col items-center text-center">
+            <div className="mb-5 h-16 w-full rounded-[18px] bg-[linear-gradient(180deg,rgba(214,232,236,0.28),rgba(173,193,200,0.08))]" aria-hidden />
+            <h1 className="text-[2.15rem] font-black tracking-[-0.03em] text-[#083b53] sm:text-[2.5rem]">
+              Join Atlas Horizon
+            </h1>
+            <p className="mt-3 text-lg text-[#414c57]">
+              Create your account and start planning your next trip.
+            </p>
 
-          <label className="flex flex-col gap-2 text-sm font-medium">
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              minLength={6}
-              className="rounded-lg border border-panel-border bg-white px-3 py-2 outline-none transition-colors focus:border-text"
-            />
-          </label>
+            <form onSubmit={handleSubmit} className="mt-9 w-full text-left">
+              <div className="space-y-6">
+                <label className="block">
+                  <span className="block text-sm font-bold uppercase tracking-[0.03em] text-[#4a525a]">
+                    Email Address
+                  </span>
+                  <div className="mt-2 flex items-center gap-3 rounded-2xl border border-[#e3e6ea] bg-white px-4 py-3.5 shadow-[0_1px_0_rgba(14,32,44,0.02)] focus-within:border-[#c6d3dc] focus-within:ring-2 focus-within:ring-[#0b546f]/10">
+                    <MailIcon />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      required
+                      placeholder="name@example.com"
+                      className="w-full bg-transparent text-[1.03rem] font-medium text-[#5b6671] outline-none placeholder:text-[#8d98a3]"
+                    />
+                  </div>
+                </label>
 
-          {errorMessage ? (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{errorMessage}</p>
-          ) : null}
+                <label className="block">
+                  <span className="block text-sm font-bold uppercase tracking-[0.03em] text-[#4a525a]">
+                    Password
+                  </span>
+                  <div className="mt-2 flex items-center gap-3 rounded-2xl border border-[#e3e6ea] bg-white px-4 py-3.5 shadow-[0_1px_0_rgba(14,32,44,0.02)] focus-within:border-[#c6d3dc] focus-within:ring-2 focus-within:ring-[#0b546f]/10">
+                    <LockIcon />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      required
+                      minLength={6}
+                      placeholder="••••••••"
+                      className="w-full bg-transparent text-[1.03rem] font-medium tracking-[0.22em] text-[#5b6671] outline-none placeholder:tracking-[0.22em] placeholder:text-[#8d98a3]"
+                    />
+                  </div>
+                </label>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-lg bg-text px-4 py-2 font-semibold text-bg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSubmitting ? "Creating account..." : "Register"}
-          </button>
-        </form>
+                {errorMessage ? (
+                  <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {errorMessage}
+                  </p>
+                ) : null}
 
-        <p className="mt-5 text-sm text-text-muted">
-          Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-text hover:underline">
-            Login
-          </Link>
-          .
-        </p>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex w-full items-center justify-center gap-3 rounded-full bg-[linear-gradient(180deg,#063f58_0%,#0a556f_100%)] px-6 py-4 text-xl font-bold text-white shadow-[0_18px_28px_rgba(8,68,90,0.28)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSubmitting ? "Creating account..." : "Create Account"}
+                  <ArrowIcon />
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-10 h-px w-full bg-[#edf0f2]" aria-hidden />
+
+            <p className="mt-6 text-base text-[#4a525a]">
+              Already have an account?{" "}
+              <Link href="/login" className="font-bold text-[#083b53] hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </section>
       </div>
     </main>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-6 shrink-0 text-[#7a8088]" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-6 shrink-0 text-[#7a8088]" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="5" y="10" width="14" height="10" rx="2" />
+      <path d="M8 10V8a4 4 0 0 1 8 0v2" />
+      <path d="M12 14v2" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-6 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M5 12h13" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
   );
 }
