@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
-import { AppNavbar } from "@/components/layout/app-navbar";
 
 const manrope = Manrope({
   variable: "--font-sans",
@@ -25,10 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} h-full antialiased`}>
       <body className="min-h-full bg-bg text-text">
-        <div className="min-h-screen">
-          <AppNavbar />
-          {children}
-        </div>
+        <div className="min-h-screen">{children}</div>
       </body>
     </html>
   );

@@ -31,15 +31,15 @@ export function AppNavbar() {
         </Link>
         <div className="flex items-center gap-6">
           <nav aria-label="Main navigation" className="flex items-center gap-5 text-sm font-medium">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`transition-colors hover:text-text ${pathname === item.href ? "text-text" : "text-text-muted"}`}
-            >
-              {item.label}
-            </Link>
-          ))}
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`transition-colors hover:text-text ${pathname === item.href ? "text-text" : "text-text-muted"}`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
           {isLoading ? (
