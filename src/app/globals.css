@@ -6,6 +6,14 @@
   --text-muted: #5e6d68;
   --panel: #ffffff;
   --panel-border: #d8ddd8;
+
+  --primary-color: #004b63;
+  --secondary-color: #38a3a5;
+  --tertiary-color: #ff8c42;
+  --neutral-color: #757779;
+
+  --font-family-headline: 'Plus Jakarta Sans', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
 }
 
 @theme inline {
@@ -14,6 +22,14 @@
   --color-text-muted: var(--text-muted);
   --color-panel: var(--panel);
   --color-panel-border: var(--panel-border);
+
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+  --color-tertiary: var(--tertiary-color);
+  --color-neutral: var(--neutral-color);
+
+  --font-body: var(--font-family-body);
+  --font-headline: var(--font-family-headline);
 }
 
 body {
