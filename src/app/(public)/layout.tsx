@@ -1,4 +1,4 @@
-import { AppNavbar } from "@/components/layout/app-navbar";
+import { Navbar } from "@/components/layout/navbar";
 
 export default function PublicLayout({
   children,
@@ -7,7 +7,7 @@ export default function PublicLayout({
 }>) {
   return (
     <>
-      <AppNavbar />
+      <Navbar />
       {children}
     </>
   );

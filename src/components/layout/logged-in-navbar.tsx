@@ -17,7 +17,7 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href;
 }
 
-export function LoggedInHeader() {
+export function LoggedInNavbar() {
   const pathname = usePathname();
 
   return (

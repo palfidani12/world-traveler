@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import { LoggedInHeader } from "@/components/layout/logged-in-header";
+import { LoggedInNavbar } from "@/components/layout/logged-in-navbar";
 import { verifyServerSession } from "@/lib/auth/session";
 
 export default async function LoggedInLayout({
@@ -19,7 +19,7 @@ export default async function LoggedInLayout({
       <div className="mx-auto flex w-full max-w-7xl flex-col rounded-3xl border border-[#d6dee3] bg-[#f8fbfd] shadow-[0_32px_90px_rgba(20,44,59,0.08)] lg:min-h-screen lg:flex-row">
         <AppSidebar />
         <section className="flex-1">
-          <LoggedInHeader />
+          <LoggedInNavbar />
           {children}
         </section>
       </div>
