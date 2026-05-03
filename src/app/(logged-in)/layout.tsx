@@ -15,13 +15,11 @@ export default async function LoggedInLayout({
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_0%_0%,#ffffff_0%,#f4f7f8_38%,#edf2f4_100%)]">
-      <div className="mx-auto flex w-full max-w-7xl flex-col rounded-3xl border border-[#d6dee3] bg-[#f8fbfd] shadow-[0_32px_90px_rgba(20,44,59,0.08)] lg:min-h-screen lg:flex-row">
+    <main className="bg-[radial-gradient(circle_at_0%_0%,#ffffff_0%,#f4f7f8_38%,#edf2f4_100%)]">
+      <LoggedInNavbar />
+      <div className="mx-auto w-full flex-row mt-8 flex min-h-[calc(100vh-96px)] gap-6 px-4 lg:flex">
         <AppSidebar />
-        <section className="flex-1">
-          <LoggedInNavbar />
-          {children}
-        </section>
+        <section className="flex-1">{children}</section>
       </div>
     </main>
   );

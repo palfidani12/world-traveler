@@ -1,51 +1,48 @@
 "use client";
 
+import { loggedInNavItems, siteConfig } from "@/config/site";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navItems = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/trips", label: "My Trips" },
-  { href: "/settings", label: "Settings" },
-] as const;
-
-function isActivePath(pathname: string, href: string) {
-  if (href === "/trips") {
-    return pathname === "/trips" || pathname.startsWith("/trips/");
-  }
-
-  return pathname === href;
-}
 
 export function LoggedInNavbar() {
   const pathname = usePathname();
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#d8e3e8] pb-4">
-      <nav
-        aria-label="Logged-in navigation"
-        className="mx-auto flex w-full max-w-md items-center justify-between text-sm font-semibold text-[#6f8492]"
-      >
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={isActivePath(pathname, item.href)
-              ? "text-[#205f79] underline decoration-2 underline-offset-[7px]"
-              : "transition hover:text-[#2d4250]"}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
+    <header className="flex items-center justify-between gap-4 bg-white/70 px-6 py-4 sticky top-0 z-30">
+      <div className="flex items-center gap-24 flex-1 min-w-0">
+        <span className="font-headline text-2xl text-primary whitespace-nowrap shrink-0">
+          {siteConfig.name}
+        </span>
+        <nav
+          aria-label="Logged-in navigation"
+          className="flex items-center gap-8 text-sm font-body tracking-wider"
+        >
+          {loggedInNavItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`transition ${
+                  isActive
+                    ? "text-primary font-bold border-b-2 border-primary pb-1"
+                    : "text-neutral hover:text-primary pb-1"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
 
-      <div className="ml-auto flex items-center gap-4 text-[#4b6675]">
-        <button type="button" aria-label="Alerts">
+      <div className="ml-auto flex items-center gap-4">
+        <div onClick={() => {}}>
           <IconBell />
-        </button>
-        <button type="button" aria-label="Profile">
+        </div>
+        <div onClick={() => {}}>
           <IconUser />
-        </button>
+        </div>
       </div>
     </header>
   );

@@ -4,3 +4,9 @@ export const siteConfig = {
 } as const;
 
 export const loggedOutNavItems = [{ href: "/", label: "HOME" }] as const;
+
+export const loggedInNavItems = [
+  { href: "/dashboard", label: "Overview" },
+  { href: "/trips", label: "My Trips" },
+  { href: "/settings", label: "Settings" },
+] as const;
