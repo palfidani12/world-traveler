@@ -85,12 +85,12 @@ export function AppSidebar() {
             {selectedTrip?.title ?? "Trip"}
           </p>
 
-          <button
-            type="button"
+          <Link
+            href={`/trips/${selectedTripId}/add-reservation`}
             className="mt-4 flex w-full items-center justify-center rounded-full bg-[#075f7d] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_26px_rgba(6,96,126,0.25)] transition hover:bg-[#064f68]"
           >
             + Quick Add
-          </button>
+          </Link>
         </div>
 
         <nav className="mt-6 space-y-2" aria-label="Selected trip navigation">
