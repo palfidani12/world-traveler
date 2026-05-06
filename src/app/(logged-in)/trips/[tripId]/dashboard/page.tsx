@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
 import { getTripById } from "@/features/trips/data";
+import { DashboardHero } from "@/components/dashboard/dashboard-hero";
+import { NextUpFlight } from "@/components/dashboard/next-up-flight";
+import { BudgetAnalysis } from "@/components/dashboard/budget-analysis";
+import { ReservationsPreview } from "@/components/dashboard/reservations-preview";
 
 export default async function TripDashboardPage({
   params,
@@ -13,37 +17,107 @@ export default async function TripDashboardPage({
     notFound();
   }
 
-  const budgetPercent = Math.min(100, Math.round((trip.budgetUsed / trip.totalBudget) * 100));
+  // Parse destinations from trip title
+  const destinations =
+    tripId === "tokyo"
+      ? "Tokyo • Kyoto • Sapporo"
+      : "London • Paris • Amsterdam • Berlin • Prague • Vienna";
+
+  // Next flight info
+  const nextFlight =
+    tripId === "tokyo"
+      ? {
+          flightTo: "Flight to Tokyo (HND)",
+          airportCode: "HND",
+          date: "October 5, 2024",
+          time: "09:45 AM",
+          departure: { code: "LHR", city: "London" },
+          arrival: { code: "HND", city: "Tokyo" },
+          terminal: "3",
+          gate: "A15",
+        }
+      : {
+          flightTo: "Flight to Paris (CDG)",
+          airportCode: "CDG",
+          date: "October 12, 2024",
+          time: "09:45 AM",
+          departure: { code: "LHR", city: "London" },
+          arrival: { code: "CDG", city: "Paris" },
+          terminal: "T5",
+          gate: "B32",
+        };
+
+  // Sample reservations
+  const sampleReservations = [
+    {
+      id: "1",
+      name: tripId === "tokyo" ? "Aman Tokyo" : "Le Maurice Paris",
+      date:
+        tripId === "tokyo"
+          ? "Check-in Oct 5"
+          : "Check-in Oct 12",
+      type: "HOTEL" as const,
+      status: "CONFIRMED" as const,
+    },
+    {
+      id: "2",
+      name: tripId === "tokyo" ? "Dinner at Nabezo" : "Le Jules Verne",
+      date:
+        tripId === "tokyo"
+          ? "Dinner Oct 6, 7:00 PM"
+          : "Dinner Oct 13, 8:00 PM",
+      type: "DINING" as const,
+      status: "PENDING" as const,
+    },
+  ];
+
+  const budgetCategories = [
+    { name: "Accommodation", amount: 2100 },
+    { name: "Activities", amount: 950 },
+  ];
+
+  // Background images for different trips
+  const backgroundImages: Record<string, string> = {
+    tokyo: "https://picsum.photos/2000/800?random=1",
+    amalfi: "https://picsum.photos/2000/800?random=2",
+    alpine: "https://picsum.photos/2000/800?random=3",
+  };
 
   return (
-    <>
-      <h2 className="text-3xl font-bold text-[#20323e]">Trip Dashboard</h2>
-      <p className="mt-2 text-[#607582]">A quick operational snapshot of your selected trip.</p>
+    <div className="space-y-6">
+      {/* Hero Section */}
+      <DashboardHero
+        title={trip.title}
+        destinations={destinations}
+        startDate={trip.dates.split(" - ")[0]}
+        backgroundImage={backgroundImages[tripId]}
+      />
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard label="Progress" value={`${trip.progress}%`} helper="planning complete" />
-        <MetricCard label="Reservations" value={`${trip.reservations}`} helper="bookings tracked" />
-        <MetricCard label="Stops" value={`${trip.stops}`} helper="planned experiences" />
-        <MetricCard label="Budget Used" value={`${budgetPercent}%`} helper={`$${trip.budgetUsed} of $${trip.totalBudget}`} />
+      {/* Next Up Flight & Weather */}
+      <NextUpFlight
+        flightTo={nextFlight.flightTo}
+        airportCode={nextFlight.airportCode}
+        date={nextFlight.date}
+        time={nextFlight.time}
+        departure={nextFlight.departure}
+        arrival={nextFlight.arrival}
+        terminal={nextFlight.terminal}
+        gate={nextFlight.gate}
+      />
+
+      {/* Budget & Reservations */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <BudgetAnalysis
+          totalBudget={trip.totalBudget}
+          spent={trip.budgetUsed}
+          categories={budgetCategories}
+        />
+
+        <ReservationsPreview
+          reservations={sampleReservations}
+          totalCount={18}
+        />
       </div>
-    </>
-  );
-}
-
-function MetricCard({
-  label,
-  value,
-  helper,
-}: Readonly<{
-  label: string;
-  value: string;
-  helper: string;
-}>) {
-  return (
-    <article className="rounded-2xl border border-[#e4ebef] bg-[#fbfdfe] p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#708692]">{label}</p>
-      <p className="mt-2 text-3xl font-bold tracking-[-0.02em] text-[#1f313d]">{value}</p>
-      <p className="mt-1 text-sm text-[#6d818e]">{helper}</p>
-    </article>
+    </div>
   );
 }
