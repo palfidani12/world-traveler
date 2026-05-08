@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getTripById } from "@/features/trips/data";
+import { resolveTripById } from "@/lib/trips/resolve-trip";
 
 export const metadata: Metadata = {
   title: "Trip Workspace",
@@ -15,7 +15,7 @@ export default async function TripWorkspaceLayout({
   params: Promise<{ tripId: string }>;
 }>) {
   const { tripId } = await params;
-  const trip = getTripById(tripId);
+  const trip = await resolveTripById(tripId);
 
   if (!trip) {
     notFound();

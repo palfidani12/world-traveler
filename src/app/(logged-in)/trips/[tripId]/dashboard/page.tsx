@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getTripById } from "@/features/trips/data";
+import { resolveTripById } from "@/lib/trips/resolve-trip";
 import { DashboardHero } from "@/components/dashboard/dashboard-hero";
 import { NextUpFlight } from "@/components/dashboard/next-up-flight";
 import { BudgetAnalysis } from "@/components/dashboard/budget-analysis";
@@ -11,7 +11,7 @@ export default async function TripDashboardPage({
   params: Promise<{ tripId: string }>;
 }>) {
   const { tripId } = await params;
-  const trip = getTripById(tripId);
+  const trip = await resolveTripById(tripId);
 
   if (!trip) {
     notFound();

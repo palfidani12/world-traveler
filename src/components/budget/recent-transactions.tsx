@@ -10,7 +10,9 @@ const categoryColors: Record<TransactionCategory, string> = {
   FOOD: "bg-orange-100 text-orange-700",
   LODGING: "bg-blue-100 text-blue-700",
   TRANSPORT: "bg-gray-100 text-gray-700",
-  FUN: "bg-cyan-100 text-cyan-700",
+  ACTIVITIES: "bg-cyan-100 text-cyan-700",
+  ENTERTAINMENT: "bg-purple-100 text-purple-700",
+  SHOPPING: "bg-pink-100 text-pink-700",
   OTHER: "bg-slate-100 text-slate-700",
 };
 
@@ -18,7 +20,9 @@ const categoryIcons: Record<TransactionCategory, string> = {
   FOOD: "🍽️",
   LODGING: "🏨",
   TRANSPORT: "🚐",
-  FUN: "🎉",
+  ACTIVITIES: "🎉",
+  ENTERTAINMENT: "🎬",
+  SHOPPING: "🛍️",
   OTHER: "💳",
 };
 

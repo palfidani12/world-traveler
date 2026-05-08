@@ -1,0 +1,25 @@
+export const COLLECTIONS = {
+  users: "users",
+  trips: "trips",
+  bookings: "bookings",
+  budgets: "budgets",
+  transactions: "transactions",
+  budgetAlerts: "budgetAlerts",
+  budgetReports: "budgetReports",
+  documents: "documents",
+  documentFolders: "documentFolders",
+  destinations: "destinations",
+  reviews: "reviews",
+  reviewComments: "reviewComments",
+  notifications: "notifications",
+  notificationPreferences: "notificationPreferences",
+  collaborations: "collaborations",
+  activities: "activities",
+  messages: "messages",
+  checklists: "checklists",
+  itineraryDays: "itineraryDays",
+  itineraryActivities: "itineraryActivities",
+  tripSettings: "tripSettings",
+} as const;
+
+export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];

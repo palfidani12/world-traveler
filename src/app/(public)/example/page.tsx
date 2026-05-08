@@ -2,9 +2,8 @@
 "use client";
 
 import { useState } from "react";
-import { query, where, getDocs, addDoc } from "firebase/firestore";
 import type { User } from "@/types/user";
-import { usersCollection } from "@/lib/converters/user-converter";
+import { usersRepository } from "@/lib/firestore";
 
 export default function UserManager() {
   const [searchName, setSearchName] = useState("");
@@ -20,16 +19,14 @@ export default function UserManager() {
     setFetchedUser(null);
 
     try {
-      const q = query(usersCollection, where("firstName", "==", searchName));
-      const querySnapshot = await getDocs(q);
+      const users = await usersRepository.findByField("firstName", searchName);
 
-      if (querySnapshot.empty) {
+      if (users.length === 0) {
         setSearchStatus("No user found with that name.");
         return;
       }
 
-      const doc = querySnapshot.docs[0];
-      const user = doc.data();
+      const user = users[0];
 
       setFetchedUser(user);
       setSearchStatus("");
@@ -45,15 +42,28 @@ export default function UserManager() {
 
     try {
       const newUser: User = {
+        id: `user-${Date.now()}`,
+        email: `user${Date.now()}@example.com`,
+        emailVerified: false,
+        profile: {
+          firstName: newFirstName,
+          lastName: "Unknown",
+          avatar: undefined,
+        },
+        role: "user",
+        plan: "free",
+        preferences: undefined,
+        settings: undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        // Legacy fields for compatibility
+        age: Number(newAge),
         firstName: newFirstName,
         lastName: "Unknown",
-        age: Number(newAge),
-        email: "",
-        role: "user",
       };
 
-      const docRef = await addDoc(usersCollection, newUser);
-      alert(`User created successfully with ID: ${docRef.id}`);
+      const createdUser = await usersRepository.create(newUser);
+      alert(`User created successfully with ID: ${createdUser.id}`);
 
       setNewFirstName("");
       setNewAge("");

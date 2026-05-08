@@ -1,8 +1,9 @@
 import { getBudgetData } from "@/features/budget/data";
-import { getTripById } from "@/features/trips/data";
+import { resolveTripById } from "@/lib/trips/resolve-trip";
 import { SpendingByCategory } from "@/components/budget/spending-by-category";
 import { BudgetHealth } from "@/components/budget/budget-health";
 import { RecentTransactions } from "@/components/budget/recent-transactions";
+import { TransactionsManager } from "@/components/budget/transactions-manager";
 
 export default async function TripBudgetPage({
   params,
@@ -10,7 +11,7 @@ export default async function TripBudgetPage({
   params: Promise<{ tripId: string }>;
 }) {
   const { tripId } = await params;
-  const trip = getTripById(tripId);
+  const trip = await resolveTripById(tripId);
   const budget = getBudgetData(tripId);
 
   if (!trip || !budget) {
@@ -47,6 +48,9 @@ export default async function TripBudgetPage({
 
       {/* Recent Transactions */}
       <RecentTransactions transactions={budget.transactions} />
+
+      {/* Firestore Transactions */}
+      <TransactionsManager tripId={tripId} />
     </div>
   );
 }

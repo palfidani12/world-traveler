@@ -15,15 +15,15 @@ export function TrainCard({ train }: TrainCardProps) {
         <p className="text-xs font-semibold uppercase text-[#666] tracking-[0.12em]">
           {train.confirmationCode}
         </p>
-        <p className="mt-1 font-semibold text-[#1a3949]">{train.name}</p>
+        <p className="mt-1 font-semibold text-[#1a3949]">{train.provider}</p>
         <p className="mt-1 text-sm text-[#666]">
           {train.departure.city} → {train.arrival.city}
         </p>
       </div>
 
       <div className="text-right">
-        <p className="text-xs text-[#999]">{train.date}</p>
-        <p className="mt-1 font-semibold text-[#1a3949]">{train.seat}</p>
+        <p className="text-xs text-[#999]">{train.departure.date}</p>
+        <p className="mt-1 font-semibold text-[#1a3949]">{train.seatNumber}</p>
       </div>
 
       <button className="ml-4 text-2xl text-[#ccc] hover:text-[#666]">↓</button>

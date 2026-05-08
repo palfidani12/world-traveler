@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getTripById } from "@/features/trips/data";
+import { resolveTripById } from "@/lib/trips/resolve-trip";
 import { ItineraryMap } from "@/components/itinerary/itinerary-map";
 
 type ItineraryChip = {
@@ -88,7 +88,7 @@ export default async function TripItineraryPage({
   params: Promise<{ tripId: string }>;
 }>) {
   const { tripId } = await params;
-  const trip = getTripById(tripId);
+  const trip = await resolveTripById(tripId);
 
   if (!trip) {
     notFound();

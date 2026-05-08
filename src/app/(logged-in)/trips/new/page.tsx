@@ -1,14 +1,61 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { tripsRepository } from "@/lib/firestore";
 
 export default function NewTripPage() {
+  const router = useRouter();
   const [tripName, setTripName] = useState("");
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const inspirationTags = ["Japan 2024", "Coastal Italy", "Icelandic Road"];
+
+  const handleCreateTrip = async () => {
+    if (!tripName.trim() || !destination.trim() || !startDate || !endDate) {
+      setError("Please fill in trip name, destination, and both dates.");
+      return;
+    }
+
+    setError(null);
+    setIsSaving(true);
+
+    try {
+      const now = new Date().toISOString();
+      const tripId = `trip-${Date.now()}`;
+
+      await tripsRepository.create({
+        id: tripId,
+        title: tripName.trim(),
+        description: "",
+        destination: destination.trim(),
+        dates: `${startDate} - ${endDate}`,
+        status: "planned",
+        visibility: "private",
+        totalBudget: 0,
+        budgetUsed: 0,
+        currency: "USD",
+        createdBy: "user-1",
+        participants: ["user-1"],
+        season: "Planned",
+        tripType: "leisure",
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      router.push(`/trips/${tripId}/dashboard`);
+    } catch (creationError) {
+      console.error(creationError);
+      setError("Failed to create trip. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -88,13 +135,17 @@ export default function NewTripPage() {
           {/* Initialize Itinerary Button */}
           <button
             type="button"
+            onClick={handleCreateTrip}
+            disabled={isSaving}
             className="w-full rounded-full bg-[#075f7d] py-4 text-lg font-semibold text-white transition hover:bg-[#064f68] flex items-center justify-center gap-2"
           >
-            Initialize Itinerary
+            {isSaving ? "Creating Trip..." : "Initialize Itinerary"}
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </button>
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           {/* Inspiration Section */}
           <div className="pt-4">

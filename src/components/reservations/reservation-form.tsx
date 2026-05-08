@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { bookingsRepository } from "@/lib/firestore";
+import type { ActivityBooking, Booking, FlightBooking, HotelBooking } from "@/features/bookings/types";
+
 type ReservationType = "flight" | "hotel" | "activity";
 
 interface ReservationFormProps {
@@ -51,50 +54,140 @@ export function ReservationForm({
   const [activityType, setActivityType] = useState("");
   const [activityConfirmation, setActivityConfirmation] = useState("");
   const [activityNotes, setActivityNotes] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSave = () => {
-    const baseData = {
-      tripId,
-      type: reservationType,
-      totalAmount,
-      paymentStatus,
-      documentation,
-    };
+  const toPaymentStatus = (): Booking["paymentStatus"] => {
+    if (paymentStatus === "pending") return "PENDING";
+    if (paymentStatus === "deposit_paid") return "PARTIALLY_PAID";
+    return "PAID";
+  };
 
-    let typeSpecificData = {};
-    if (reservationType === "hotel") {
-      typeSpecificData = {
-        hotelName,
-        checkIn,
-        checkOut,
-        roomType,
-        confirmationNumber,
-        amenities: hotelAmenities,
-      };
-    } else if (reservationType === "flight") {
-      typeSpecificData = {
-        airline,
-        flightNumber,
-        departureAirport,
-        arrivalAirport,
-        departureTime,
-        arrivalTime,
-        seatNumber,
-        boardingPass,
-      };
-    } else if (reservationType === "activity") {
-      typeSpecificData = {
-        activityName,
-        activityDate,
-        activityTime,
-        location,
-        activityType,
-        confirmationNumber: activityConfirmation,
-        notes: activityNotes,
-      };
+  const handleSave = async () => {
+    setErrorMessage(null);
+    setIsSaving(true);
+
+    try {
+      const now = new Date().toISOString();
+      const numericAmount = Number(totalAmount || "0");
+
+      if (reservationType === "hotel") {
+        const hotelBooking: HotelBooking = {
+          id: `hotel-${Date.now()}`,
+          tripId,
+          type: "HOTEL",
+          name: hotelName || "Hotel Booking",
+          address: { city: "Unknown", country: "Unknown" },
+          roomType: roomType || "Standard",
+          checkInDate: checkIn || now.slice(0, 10),
+          checkOutDate: checkOut || now.slice(0, 10),
+          nights:
+            checkIn && checkOut
+              ? Math.max(
+                  1,
+                  Math.ceil(
+                    (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
+                      86400000,
+                  ),
+                )
+              : 1,
+          guests: [{ name: "Primary Traveler" }],
+          confirmationCode: confirmationNumber || `HOTEL-${Date.now()}`,
+          status: "CONFIRMED",
+          paymentStatus: toPaymentStatus(),
+          price: numericAmount,
+          pricePerNight: numericAmount,
+          currency: "USD",
+          amenities: hotelAmenities
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean),
+          documentationUrl: documentation?.name,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        await bookingsRepository.create(hotelBooking);
+        onSave?.(hotelBooking);
+      }
+
+      if (reservationType === "flight") {
+        const [departureDate = now.slice(0, 10), departureClock = "00:00"] =
+          (departureTime || "").split("T");
+        const [arrivalDate = departureDate, arrivalClock = departureClock] =
+          (arrivalTime || "").split("T");
+
+        const flightBooking: FlightBooking = {
+          id: `flight-${Date.now()}`,
+          tripId,
+          type: "FLIGHT",
+          confirmationCode: flightNumber || `FLIGHT-${Date.now()}`,
+          airline: airline || "Unknown Airline",
+          cabin: "ECONOMY",
+          departure: {
+            code: departureAirport || "N/A",
+            city: departureAirport || "Unknown",
+            country: "Unknown",
+            time: departureClock,
+            date: departureDate,
+          },
+          arrival: {
+            code: arrivalAirport || "N/A",
+            city: arrivalAirport || "Unknown",
+            country: "Unknown",
+            time: arrivalClock,
+            date: arrivalDate,
+          },
+          seatNumbers: seatNumber ? [seatNumber] : undefined,
+          status: "CONFIRMED",
+          paymentStatus: toPaymentStatus(),
+          price: numericAmount,
+          currency: "USD",
+          documentationUrl: boardingPass?.name || documentation?.name,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        await bookingsRepository.create(flightBooking);
+        onSave?.(flightBooking);
+      }
+
+      if (reservationType === "activity") {
+        const activityBooking: ActivityBooking = {
+          id: `activity-${Date.now()}`,
+          tripId,
+          type: "ACTIVITY",
+          name: activityName || "Activity Booking",
+          provider: undefined,
+          description: activityNotes || undefined,
+          location: { city: location || "Unknown", country: "Unknown" },
+          date: activityDate || now.slice(0, 10),
+          startTime: activityTime || "00:00",
+          category: "OTHER",
+          participants: [{ name: "Primary Traveler" }],
+          participantCount: 1,
+          confirmationCode: activityConfirmation || `ACTIVITY-${Date.now()}`,
+          status: "CONFIRMED",
+          paymentStatus: toPaymentStatus(),
+          price: numericAmount,
+          currency: "USD",
+          specialInstructions: activityType || undefined,
+          documentationUrl: documentation?.name,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        await bookingsRepository.create(activityBooking);
+        onSave?.(activityBooking);
+      }
+
+      if (cancelUrl) router.push(cancelUrl);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Failed to save reservation.");
+    } finally {
+      setIsSaving(false);
     }
-
-    onSave?.({ ...baseData, ...typeSpecificData });
   };
 
   const getTitle = () => {
@@ -578,11 +671,13 @@ export function ReservationForm({
         </button>
         <button
           onClick={handleSave}
+          disabled={isSaving}
           className="rounded-full bg-[#075f7d] px-6 py-3 font-semibold text-white transition hover:bg-[#064f68]"
         >
-          Save Reservation
+          {isSaving ? "Saving..." : "Save Reservation"}
         </button>
       </div>
+      {errorMessage && <p className="mt-3 text-sm text-red-600">{errorMessage}</p>}
     </div>
   );
 }

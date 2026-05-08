@@ -23,7 +23,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
           <div>
             <h3 className="text-lg font-bold text-[#1a3949]">{hotel.name}</h3>
             <p className="mt-1 text-sm text-[#666]">
-              {hotel.startDate} - {hotel.endDate} • {hotel.nights} Nights
+              {hotel.checkInDate} - {hotel.checkOutDate} • {hotel.nights} Nights
             </p>
           </div>
           <span className={`rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap ${statusColor}`}>

@@ -4,6 +4,7 @@ const statusStyles: Record<(typeof trips)[number]["status"], string> = {
   planned: "bg-amber-100 text-amber-900",
   "in-progress": "bg-sky-100 text-sky-900",
   completed: "bg-emerald-100 text-emerald-900",
+  archived: "bg-gray-100 text-gray-700",
 };
 
 export function TripsOverview() {
@@ -20,7 +21,9 @@ export function TripsOverview() {
                 {trip.season}
               </p>
               <h2 className="mt-2 text-xl font-semibold text-text">
-                {trip.destination}
+                 {typeof trip.destination === "string"
+                  ? trip.destination
+                  : trip.destination?.name || "Unknown"}
               </h2>
             </div>
             <span
